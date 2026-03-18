@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimateCart | real imagery • 12 sections</title>
+
+    <link rel="icon" href="./anime.jpg">
+    <!-- Bootstrap 5 + icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- animation libraries: Animate.css + AOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Option 1: Include in HTML -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+        /* ===== CUSTOM ANIMATIONS & VARIABLES ===== */
+        :root {
+            --deep-indigo: #1a1a3d;
+            --soft-glow: #5f4b8b;
+            --vibrant-coral: #ff6f61;
+            --golden: #ffb347;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            overflow-x: hidden;
+            background: #fcfcff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* floating + pulse + spin + bounce custom */
+        @keyframes float-soft {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .float-me {
+            animation: float-soft 4s ease-in-out infinite;
+        }
+
+        @keyframes subtle-pulse {
+            0% {
+                opacity: 0.9;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+
+            100% {
+                opacity: 0.9;
+                transform: scale(1);
+            }
+        }
+
+        .pulse-subtle {
+            animation: subtle-pulse 3s infinite;
+        }
+
+        .spin-slow {
+            transition: transform 0.5s;
+        }
+
+        .spin-slow:hover {
+            transform: rotate(360deg);
+        }
+
+        /* card hover 3D */
+        .card-3d-hover {
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+        }
+
+        .card-3d-hover:hover {
+            transform: perspective(800px) rotateY(4deg) translateY(-8px);
+            box-shadow: 0 25px 35px -10px rgba(26, 26, 61, 0.2);
+        }
+
+        /* image zoom overlay */
+        .img-zoom-wrapper {
+            overflow: hidden;
+            border-radius: inherit;
+        }
+
+        .img-zoom-wrapper img {
+            transition: transform 0.7s ease;
+        }
+
+        .img-zoom-wrapper:hover img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        /* category pill */
+        .cat-pill {
+            transition: all 0.2s;
+            background: white;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+
+        .cat-pill:hover,
+        .cat-pill.active {
+            background: var(--deep-indigo);
+            color: white !important;
+            border-color: var(--deep-indigo);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 18px -6px #1a1a3d80;
+        }
+
+        /* ripple effect on buttons */
+        .ripple-btn {
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+
+        .ripple-btn::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.6s;
+        }
+
+        .ripple-btn:active::after {
+            transform: scale(0, 0);
+            opacity: 0.3;
+            transition: 0s;
+        }
+
+        /* footer link slide */
+        .footer-link {
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .footer-link:hover {
+            transform: translateX(7px) scale(1.05);
+            color: var(--golden) !important;
+        }
+
+        /* toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--deep-indigo);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* skeleton shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* parallax banner inner - FIXED SYNTAX */
+        .parallax-section {
+            position: relative;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        /* overlay for dark tint */
+        .overlay-dark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 61, 0.7);
+            z-index: 1;
+        }
+
+        .content-above {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* real images - all unsplash or pexels high quality */
+        .real-image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* responsive */
+        @media (max-width: 767px) {
+            .display-4 {
+                font-size: 2.5rem;
+            }
+
+            .toast-notification {
+                left: 16px;
+                right: 16px;
+                text-align: center;
+            }
+
+            .parallax-section {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== 1. NAVBAR (sticky, animated) ===== -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top py-3" data-aos="fade-down"
+        data-aos-duration="900">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#">
+                <i class="bi bi-bag-heart-fill me-2 spin-slow" style="color: var(--deep-indigo);"></i>
+                <span
+                    style="background: linear-gradient(145deg, #1a1a3d, #5f4b8b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AnimateCart</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold gap-3">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#deals">Deals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Stories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#brands">Brands</a></li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <a href="#" class="btn btn-outline-dark rounded-pill position-relative ripple-btn" id="cartBtn">
+                        <i class="bi bi-cart3"></i> <span id="cartCount"
+                            class="badge bg-dark text-white rounded-pill">0</span>
+                    </a>
+                    <a href="#" class="btn btn-primary rounded-pill px-4 ripple-btn"
+                        style="background:var(--deep-indigo); border: none;" id="loginBtn"><i
+                            class="bi bi-person-circle"></i> Sign in</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== 2. HERO SECTION (full visual + real photo) ===== -->
+    <section id="home" class="pt-5 pb-5" style="background: linear-gradient(135deg, #f1f4ff 0%, #e6edfa 100%);">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+                    <h1 class="display-4 fw-bold mb-4 animate__animated animate__bounceInDown"
+                        style="color:var(--deep-indigo);">Shop the <span style="color:#ff6f61;">movement</span></h1>
+                    <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">12 sections filled with
+                        stunning real photography. Every image tells a story, every hover reacts.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#products" class="btn btn-lg btn-dark rounded-pill px-5 py-3 shadow ripple-btn"
+                            style="background:var(--deep-indigo);"><i class="bi bi-arrow-down-circle"></i> Explore</a>
+                        <a href="#" class="btn btn-lg btn-outline-secondary rounded-pill px-5 py-3"><i
+                                class="bi bi-camera-reels"></i> Showreel</a>
+                    </div>
+                    <div class="mt-5 d-flex gap-3 float-me">
+                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"><i class="bi bi-truck fs-5 me-2"
+                                style="color:var(--deep-indigo);"></i>Free shipping</span>
+                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"><i
+                                class="bi bi-arrow-repeat fs-5 me-2" style="color:var(--deep-indigo);"></i>30 days
+                            return</span>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-delay="200">
+                    <!-- real hero image: shopping/lifestyle -->
+                    <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/d9/a4/a6/7b/95/v1_E10/E107C3QR.JPG?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=a1fff93b248f92664e48b58a9fbf0b0c45c887bbc7dfa4f1455be4dd09e02235"
+                        alt="happy shopping lifestyle" class="img-fluid rounded-5 shadow-lg card-3d-hover"
+                        style="max-width: 100%; height: auto; object-fit: cover; aspect-ratio: 4/3;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. CATEGORY PILLS (filter) ===== -->
+    <section id="categories" class="container py-4" data-aos="zoom-in-up" data-aos-duration="700">
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <span class="cat-pill active rounded-pill py-2 px-4 fw-semibold" data-filter="all">All items</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="electronics">Electronics</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="fashion">Fashion</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="home">Home & living</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="books">Books</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="toys">Toys</span>
+        </div>
+    </section>
+
+    <!-- ===== 4. PRODUCT GRID (real product images) ===== -->
+    <section id="products" class="container pb-5">
+        <h2 class="fw-bold mb-5" data-aos="flip-up">✨ trending now <span class="fs-5 fw-light">(real product
+                shots)</span></h2>
+        <div class="row g-4" id="productGrid"></div>
+    </section>
+
+    <!-- ===== 5. DEALS & OFFERS BANNER (real photo background) - FIXED LINE 176 ===== -->
+    <section id="deals" class="parallax-section my-5"
+        style="background-image: url('https://images.pexels.com/photos/5632371/pexels-photo-5632371.jpeg?auto=compress&cs=tinysrgb&w=600'); min-height: 300px; display: flex; align-items: center;"
+        data-aos="fade">
+        <!-- Dark overlay div -->
+        <div class="overlay-dark"></div>
+        <div class="container text-white text-center py-5 content-above" data-aos="zoom-in" data-aos-duration="1200">
+            <h2 class="display-5 fw-bold animate__animated animate__flash animate__infinite animate__slow">FLAT 40% OFF
+                + EXTRA 10%</h2>
+            <p class="lead fs-2">use code <span class="badge bg-warning text-dark p-3">ANIMATE10</span></p>
+            <img src="https://images.pexels.com/photos/6863515/pexels-photo-6863515.jpeg?auto=compress&cs=tinysrgb&w=600"
+                alt="deal badge" class="img-fluid mt-3 pulse-subtle"
+                style="border-radius: 40px; max-width: 200px; height: auto;">
+        </div>
+    </section>
+
+    <!-- ===== 6. FEATURED COLLECTION (real photography) ===== -->
+    <section class="container py-5">
+        <h2 class="fw-bold mb-4" data-aos="fade-right">🎁 handpicked for you</h2>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
+                <div class="card border-0 shadow-sm card-3d-hover rounded-4 overflow-hidden">
+                    <img src="https://images.pexels.com/photos/1037992/pexels-photo-1037992.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="card-img real-image" alt="summer fashion" style="height: 250px;">
+                    <div class="card-img-overlay d-flex align-items-end bg-dark bg-opacity-25">
+                        <h5 class="text-white fw-bold">Summer vibes <i class="bi bi-arrow-right"></i></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+                <div class="card border-0 shadow-sm card-3d-hover rounded-4 overflow-hidden">
+                    <img src="https://images.pexels.com/photos/276528/pexels-photo-276528.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="card-img real-image" alt="minimal interior" style="height: 250px;">
+                    <div class="card-img-overlay d-flex align-items-end">
+                        <h5 class="text-white fw-bold">Modern living</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="flip-left" data-aos-delay="300">
+                <div class="card border-0 shadow-sm card-3d-hover rounded-4 overflow-hidden">
+                    <img src="https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="card-img real-image" alt="tech gadgets" style="height: 250px;">
+                    <div class="card-img-overlay d-flex align-items-end">
+                        <h5 class="text-white fw-bold">New gadgets</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 7. TESTIMONIALS / CUSTOMER STORIES (real faces) ===== -->
+    <section id="testimonials" class="bg-light py-5" data-aos="fade-up">
+        <div class="container">
+            <h2 class="fw-bold mb-5 text-center"><i class="bi bi-chat-heart"></i> what our buyers say</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="card border-0 shadow-sm h-100 p-4 text-center rounded-4">
+                        <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600"
+                            class="rounded-circle mx-auto mb-3" width="80" height="80" style="object-fit: cover;"
+                            alt="client">
+                        <p class="fst-italic">"The real product photos are stunning! I keep coming back."</p>
+                        <h6 class="fw-bold">— Lena K.</h6>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="card border-0 shadow-sm h-100 p-4 text-center rounded-4">
+                        <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=600"
+                            class="rounded-circle mx-auto mb-3" width="80" height="80" style="object-fit: cover;"
+                            alt="client">
+                        <p class="fst-italic">"Incredible quality and smooth hover effects. 10/10"</p>
+                        <h6 class="fw-bold">— Marcus T.</h6>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="card border-0 shadow-sm h-100 p-4 text-center rounded-4">
+                        <img src="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=600"
+                            class="rounded-circle mx-auto mb-3" width="80" height="80" style="object-fit: cover;"
+                            alt="client">
+                        <p class="fst-italic">"Finally a store that feels alive. Love the 12 sections!"</p>
+                        <h6 class="fw-bold">— Samira L.</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 8. BRANDS CAROUSEL (real brand imagery) ===== -->
+    <section id="brands" class="container py-5">
+        <h2 class="text-center fw-bold mb-4" data-aos="fade-down">as seen in</h2>
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-5">
+            <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/94/84/64/53/e7/v1_E10/E10AJQUI.JPG?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c9ba8a5e9b8c3dade13a6033085e1bca34a8a6cf7caae41d70b3f2e2640bd238"
+                class="opacity-75 hover-zoom" style="transition: 0.2s; max-width: 120px; border-radius: 8px;"
+                data-aos="flip-up">
+            <img src="https://images.pexels.com/photos/326501/pexels-photo-326501.jpeg?auto=compress&cs=tinysrgb&w=600"
+                class="opacity-75 hover-zoom" style="transition: 0.2s; max-width: 120px; border-radius: 8px;"
+                data-aos="flip-up" data-aos-delay="50">
+            <img src="https://images.pexels.com/photos/1036641/pexels-photo-1036641.jpeg?auto=compress&cs=tinysrgb&w=600"
+                class="opacity-75 hover-zoom" style="transition: 0.2s; max-width: 120px; border-radius: 8px;"
+                data-aos="flip-up" data-aos-delay="100">
+            <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3d/5b/c8/7f/a5/v1_E10/E109U3CU.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=e926e1e8df63c36c2f74948f4b3146575ed63491512b37dd39741afffcf04770"
+                class="opacity-75 hover-zoom" style="transition: 0.2s; max-width: 120px; border-radius: 8px;"
+                data-aos="flip-up" data-aos-delay="150">
+            <img src="https://images.pexels.com/photos/3862375/pexels-photo-3862375.jpeg?auto=compress&cs=tinysrgb&w=600"
+                class="opacity-75 hover-zoom" style="transition: 0.2s; max-width: 120px; border-radius: 8px;"
+                data-aos="flip-up" data-aos-delay="200">
+        </div>
+    </section>
+
+    <!-- ===== 9. WHY SHOP WITH US (real lifestyle imagery) ===== -->
+    <section class="py-5 bg-white" data-aos="fade-up">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6" data-aos="fade-right">
+                    <img src="https://images.pexels.com/photos/4473614/pexels-photo-4473614.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="img-fluid rounded-4 shadow-lg float-me" alt="fast delivery"
+                        style="aspect-ratio: 4/3; object-fit: cover;">
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-6" data-aos="fade-left" data-aos-delay="0">
+                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-truck fs-1"
+                                    style="color:var(--deep-indigo);"></i>
+                                <p class="mt-2">Free shipping</p>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="fade-left" data-aos-delay="100">
+                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-arrow-repeat fs-1"
+                                    style="color:var(--deep-indigo);"></i>
+                                <p class="mt-2">30 days return</p>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="fade-left" data-aos-delay="200">
+                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-shield-check fs-1"
+                                    style="color:var(--deep-indigo);"></i>
+                                <p class="mt-2">Secure</p>
+                            </div>
+                        </div>
+                        <div class="col-6" data-aos="fade-left" data-aos-delay="300">
+                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-gift fs-1"
+                                    style="color:var(--deep-indigo);"></i>
+                                <p class="mt-2">Gift wraps</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 10. INSTAGRAM / COMMUNITY FEED (real user photos) ===== -->
+    <section class="container py-5">
+        <h2 class="fw-bold mb-4" data-aos="fade">#AnimateCart community</h2>
+        <div class="row g-2">
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="0"><img
+                    src="https://images.pexels.com/photos/761977/pexels-photo-761977.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="50"><img
+                    src="https://images.pexels.com/photos/1275380/pexels-photo-1275380.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="100"><img
+                    src="https://images.pexels.com/photos/941555/pexels-photo-941555.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="150"><img
+                    src="https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="200"><img
+                    src="https://images.pexels.com/photos/1382731/pexels-photo-1382731.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+            <div class="col-4 col-md-2" data-aos="zoom-in" data-aos-delay="250"><img
+                    src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/80/6a/57/a9/42/v1_E10/E108FWD7.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=fc2a5aae476b2361234f0a59929cb17798b01da4822e19e4dfafa360f34bd652"
+                    class="img-fluid rounded-3 img-zoom-wrapper" style="aspect-ratio: 1/1; object-fit: cover;"></div>
+        </div>
+    </section>
+
+    <!-- ===== 11. NEWSLETTER + BIG VISUAL (real photo) ===== -->
+    <section class="py-5" style="background:#eaf0f6;" data-aos="flip-up">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h2 class="fw-bold">get 15% off 🎁</h2>
+                    <p>Subscribe to our animated newsletter + receive a welcome gift.</p>
+                    <div class="input-group mb-3 w-75">
+                        <input type="email" class="form-control rounded-start-pill" placeholder="Your email">
+                        <button class="btn btn-dark rounded-end-pill px-4 ripple-btn"
+                            style="background:var(--deep-indigo);">Subscribe</button>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <img src="https://images.pexels.com/photos/7433839/pexels-photo-7433839.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="img-fluid rounded-4 shadow pulse-subtle" alt="newsletter gift"
+                        style="aspect-ratio: 4/3; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 12. FOOTER (with real image) ===== -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3" data-aos="fade-right">
+                    <i class="bi bi-bag-heart-fill fs-1 mb-3 d-block" style="color:var(--golden);"></i>
+                    <img src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="img-fluid mb-3 rounded-3" alt="footer lifestyle" style="max-width: 200px;">
+                    <p class="small">12 sections, real imagery, endless animations. Est. 2026.</p>
+                </div>
+                <div class="col-md-2" data-aos="fade-up" data-aos-delay="50">
+                    <h5>Explore</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 footer-link">New arrivals</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">Best sellers</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">Sale</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2" data-aos="fade-up" data-aos-delay="100">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 footer-link">Contact</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">FAQs</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">Shipping</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2" data-aos="fade-up" data-aos-delay="150">
+                    <h5>Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 footer-link">About</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">Careers</a></li>
+                        <li><a href="#" class="text-white-50 footer-link">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3" data-aos="fade-left">
+                    <h5>Follow the motion</h5>
+                    <div class="text-light">
+                        <i class="bi bi-instagram fs-3 me-2 footer-link"></i>
+                        <i class="bi bi-twitter-x fs-3 me-2 footer-link"></i>
+                        <i class="bi bi-tiktok fs-3 footer-link"></i>
+
+                    </div>
+                    <img src="https://images.pexels.com/photos/267399/pexels-photo-267399.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="img-fluid mt-3 rounded-3" alt="app store badge" style="max-width: 150px;">
+                </div>
+
+                <div class="d-flex gap-3 mt-3">
+                    <a href="https://github.com/ibmoore04" class="text-white fs-4" target="_blank"><i
+                            class="bi bi-github"></i></a>
+                    <a href="https://www.linkedin.com/in/akanbi-ibrahim-4ab3043a6/" class="text-white fs-4"
+                        target="_blank"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61565920483171" class="text-white fs-4"
+                        target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://wa.me/2347053357203" class="text-white fs-4" target="_blank"><i
+                            class="bi bi-whatsapp"></i></a>
+                </div>
+
+            </div>
+
+
+        </div>
+    </footer>
+
+    <!-- 12. FOOTER -->
+    <!-- <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row g-4">
+
+                <div class="col-md-3">
+                    <h5>AnimateCart</h5>
+                    <img src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        class="img-fluid rounded-3 mb-3" style="max-width:150px;">
+
+                    
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#" class="text-white fs-4"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Explore</h5>
+                    <ul class="list-unstyled">
+                        <li>New arrivals</li>
+                        <li>Best sellers</li>
+                        <li>Sale</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </footer> -->
+    <!-- toast -->
+    <div id="liveToast" class="toast-notification"><i class="bi bi-check-circle-fill me-2"></i> <span id="toastMsg">Item
+            added</span></div>
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: false, duration: 800 });
+
+        // PRODUCT DATASET (real product images from unsplash/pexels)
+        const products = [
+            { id: 1, name: 'Sonic headphones', price: 79, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/67/40/0c/d0/d8/v1_E10/E101BSWN.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=947197dc8d0b4fe171fc45218815453d7417802aa130b141a4cf9f64ef3762d6' },
+            { id: 2, name: 'Retro sneakers', price: 120, category: 'fashion', img: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600' },
+            { id: 3, name: 'Smart hub', price: 59, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/ce/fb/24/49/3c/v1_E10/E106Q7Y.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=727a66244f85b127d380051a1eab9320637f2e704f956ca9aff0f2bc171f0654' },
+            { id: 4, name: 'Leather watch', price: 215, category: 'fashion', img: 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=600' },
+            { id: 5, name: 'Cozy blanket', price: 45, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/e4/17/bd/a9/95/v1_E10/E105AJTH.jpeg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=f22bcf5dbbc14750e836d84d503494caf7ba562efa713830c4d7c942f6b337b2' },
+            { id: 6, name: 'Sci‑fi novel', price: 18, category: 'books', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/f7/b6/71/2b/f9/v1_E10/E107M051.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=cc006cccb9b01874dbf0e16a6bcac2a7ce795d4c6daa01cd03cd3ce5b510486e' },
+            { id: 7, name: 'Earbuds pro', price: 149, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/80/1e/ff/f3/25/v1_E10/E105DP7E.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=143237b46107f39e6936bd97c1ab6243fa47be02af820da8ba2e71311cdd9fb0' },
+            { id: 8, name: 'Designer lamp', price: 89, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/56/5d/24/f4/2d/v1_E10/E101F4EL.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=db17c09545286bdf87c41722fa102dcc84033ea02651f4a74357d3db22c9b3ae' },
+            { id: 9, name: 'Action figure', price: 34, category: 'toys', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/af/f7/a2/22/45/v1_E10/E106MRHA.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c1885f32a3ad955f8fd04b4d5708a13b188787f2b683068eb4527070a4a9f519' },
+            { id: 10, name: 'Puzzle 1000pcs', price: 22, category: 'toys', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/be/df/05/f0/f0/v1_E11/E117V2I0.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=864d0a0ec0a245cf7351382a44b86bdb9f96b47ccd3eeb2547ae767dd473a10f' },
+            { id: 11, name: 'Cookbook', price: 27, category: 'books', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3f/d2/29/fb/0d/v1_E10/E1027PH7.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=4b6c531555a31392255927fcb4c64803c8c185cc244679e38ec85872745c7cda' },
+            { id: 12, name: 'Scented candle', price: 32, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/09/45/4c/67/c4/v1_E11/E113CAC9.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=00d15d56c8eac33466f5e5c66d85e1bb980f5d5a680099f9066e5e7d9e07edd7' }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const grid = document.getElementById('productGrid');
+        const cartSpan = document.getElementById('cartCount');
+        const toastEl = document.getElementById('liveToast');
+        const toastMsg = document.getElementById('toastMsg');
+
+        function updateCartCount() {
+            cartSpan.innerText = cart.reduce((acc, i) => acc + (i.quantity || 1), 0);
+        }
+
+        function showToast(msg) {
+            toastMsg.innerText = msg;
+            toastEl.classList.add('show');
+            setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+
+        function renderProducts(filter = 'all') {
+            grid.innerHTML = Array(4).fill(0).map(() => `<div class="col-sm-6 col-lg-3"><div class="card border-0 shadow-sm p-3 shimmer" style="height:260px;border-radius:28px;"></div></div>`).join('');
+            setTimeout(() => {
+                const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+                if (!filtered.length) { grid.innerHTML = '<div class="col-12 text-center p-5"><h3>✨ no items ✨</h3></div>'; return; }
+                let html = '';
+                filtered.forEach((p, idx) => {
+                    html += `<div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="${idx * 50}">
+            <div class="card h-100 border-0 shadow-sm card-3d-hover" style="border-radius:28px; overflow:hidden;">
+              <div class="img-zoom-wrapper" style="height:180px;"><img src="${p.img}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="${p.name}"></div>
+              <div class="card-body bg-white"><h6 class="fw-bold">${p.name}</h6><p class="text-primary fw-semibold">$${p.price}</p>
+              <button class="btn btn-sm btn-dark w-100 rounded-pill ripple-btn add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}"><i class="bi bi-cart-plus"></i> Add</button></div>
+            </div></div>`;
+                });
+                grid.innerHTML = html;
+                document.querySelectorAll('.add-to-cart').forEach(b => b.addEventListener('click', addToCart));
+                AOS.refresh();
+            }, 300);
+        }
+
+        function addToCart(e) {
+            const btn = e.currentTarget;
+            const id = parseInt(btn.dataset.id);
+            const name = btn.dataset.name;
+            const price = parseFloat(btn.dataset.price);
+            const exist = cart.find(i => i.id === id);
+            if (exist) exist.quantity = (exist.quantity || 1) + 1;
+            else cart.push({ id, name, price, quantity: 1 });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showToast(`${name} added`);
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Added';
+            btn.disabled = true;
+            setTimeout(() => { btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add'; btn.disabled = false; }, 800);
+        }
+
+        document.querySelectorAll('.cat-pill').forEach(p => {
+            p.addEventListener('click', function () {
+                document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
+                this.classList.add('active');
+                renderProducts(this.dataset.filter);
+            });
+        });
+
+        document.getElementById('cartBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!cart.length) showToast('🛒 empty cart');
+            else showToast('cart: ' + cart.map(i => `${i.name} (${i.quantity || 1})`).join(', '));
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', (e) => {
+            e.preventDefault(); showToast('✨ sign-in modal ✨');
+        });
+
+        // initial
+        renderProducts('all');
+        updateCartCount();
+
+        // storage sync
+        window.addEventListener('storage', (e) => { if (e.key === 'cart') { cart = JSON.parse(e.newValue) || []; updateCartCount(); } });
+    </script>
+</body>
+
+</html>
