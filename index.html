@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Option 1: Include in HTML -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <style>
         /* ===== CUSTOM ANIMATIONS & VARIABLES ===== */
         :root {
@@ -23,16 +21,79 @@
             --soft-glow: #5f4b8b;
             --vibrant-coral: #ff6f61;
             --golden: #ffb347;
+            --bg-primary: #fcfcff;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a3d;
+            --text-secondary: #4a5568;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(26, 26, 61, 0.1);
+            --footer-bg: #0a0a1a;
+            --footer-text: #a0a0c0;
+            --footer-heading: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --deep-indigo: #6b5b95;
+            --soft-glow: #9b8bcb;
+            --vibrant-coral: #ff8a7a;
+            --golden: #ffc46b;
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --footer-bg: #050508;
+            --footer-text: #8a8aa8;
+            --footer-heading: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             overflow-x: hidden;
-            background: #fcfcff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         html {
             scroll-behavior: smooth;
+        }
+
+        /* ADD THIS - Makes nav links light in dark mode */
+        [data-theme="dark"] .nav-link {
+            color: #e0e0e0 !important;
+        }
+
+        [data-theme="dark"] .nav-link:hover {
+            color: var(--golden) !important;
+        }
+
+        /* ADD THIS - Makes product card text dark in dark mode */
+        [data-theme="dark"] .card-body .fw-bold,
+        [data-theme="dark"] .card-body .text-primary {
+            color: #1a1a1a !important;
+        }
+
+        [data-theme="dark"] .card-body {
+            background-color: #f5f5f5 !important;
+        }
+
+        /* ADD THIS - Makes card black in dark mode */
+        [data-theme="dark"] .card {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+        }
+
+        [data-theme="dark"] .card-body {
+            background-color: #1a1a1a !important;
+        }
+
+        [data-theme="dark"] .card-body .fw-bold,
+        [data-theme="dark"] .card-body .text-primary {
+            color: #ffffff !important;
         }
 
         /* floating + pulse + spin + bounce custom */
@@ -90,7 +151,7 @@
 
         .card-3d-hover:hover {
             transform: perspective(800px) rotateY(4deg) translateY(-8px);
-            box-shadow: 0 25px 35px -10px rgba(26, 26, 61, 0.2);
+            box-shadow: 0 25px 35px -10px var(--shadow-color);
         }
 
         /* image zoom overlay */
@@ -110,9 +171,10 @@
         /* category pill */
         .cat-pill {
             transition: all 0.2s;
-            background: white;
-            border: 1px solid #dee2e6;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             cursor: pointer;
+            color: var(--text-primary);
         }
 
         .cat-pill:hover,
@@ -121,7 +183,7 @@
             color: white !important;
             border-color: var(--deep-indigo);
             transform: translateY(-4px);
-            box-shadow: 0 10px 18px -6px #1a1a3d80;
+            box-shadow: 0 10px 18px -6px var(--shadow-color);
         }
 
         /* ripple effect on buttons */
@@ -174,7 +236,7 @@
             color: white;
             padding: 14px 30px;
             border-radius: 50px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 30px var(--shadow-color);
             z-index: 9999;
             opacity: 0;
             transform: translateY(20px);
@@ -192,6 +254,10 @@
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
+        }
+
+        [data-theme="dark"] .shimmer {
+            background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
         }
 
         @keyframes shimmer {
@@ -237,6 +303,407 @@
             height: 100%;
         }
 
+        /* Cart bounce animation */
+        @keyframes cartBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .cart-bounce {
+            animation: cartBounce 0.3s ease;
+        }
+
+        /* Enhanced product card */
+        .product-card {
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 35px -12px var(--shadow-color) !important;
+        }
+
+        /* Button click feedback */
+        .btn-clicked {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        /* Mini cart preview styles */
+        .cart-preview {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            z-index: 10000;
+            overflow: hidden;
+            animation: slideInCart 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes slideInCart {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cart-preview-header {
+            background: var(--deep-indigo);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-preview-header h6 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .close-preview {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .cart-preview-items {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .cart-preview-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .cart-preview-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .cart-preview-item-info {
+            flex: 1;
+        }
+
+        .cart-preview-item-info h6 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .cart-preview-item-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #ff6b6b;
+            transition: transform 0.2s;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-preview-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .btn-checkout {
+            width: 100%;
+            margin-top: 8px;
+            background: var(--deep-indigo);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-checkout:hover {
+            background: var(--soft-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll animations for sections */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image hover enhancement */
+        .img-hover-scale {
+            transition: transform 0.4s ease;
+        }
+
+        .img-hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        /* Dark mode toggle button */
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            background: var(--deep-indigo);
+            color: white;
+        }
+
+        /* Navbar background adaptation */
+        .navbar {
+            background: var(--bg-secondary) !important;
+            transition: background 0.3s ease;
+        }
+
+        .card {
+            background: var(--card-bg) !important;
+            transition: background 0.3s ease;
+        }
+
+        .bg-light {
+            background: var(--bg-secondary) !important;
+        }
+
+        .text-dark {
+            color: var(--text-primary) !important;
+        }
+
+        .border {
+            border-color: var(--border-color) !important;
+        }
+
+        /* ===== MODERN FOOTER STYLES ===== */
+        .modern-footer {
+            background: var(--footer-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--deep-indigo), var(--golden), var(--vibrant-coral), var(--soft-glow));
+            animation: gradientShift 3s ease infinite;
+            background-size: 300% 100%;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .footer-brand-icon {
+            background: linear-gradient(135deg, var(--deep-indigo), var(--soft-glow));
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .footer-brand-icon:hover {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .footer-social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: var(--footer-text);
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .footer-social-icon:hover {
+            background: var(--deep-indigo);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .footer-heading {
+            color: var(--footer-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--golden);
+            transition: width 0.3s;
+        }
+
+        .footer-link-modern {
+            color: var(--footer-text);
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .footer-link-modern:hover {
+            color: var(--golden);
+            transform: translateX(5px);
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .newsletter-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--golden);
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 180, 71, 0.3);
+        }
+
+        .newsletter-btn {
+            background: linear-gradient(135deg, var(--deep-indigo), var(--soft-glow));
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 91, 149, 0.4);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .payment-icons i {
+            font-size: 28px;
+            color: var(--footer-text);
+            transition: all 0.2s;
+            margin: 0 5px;
+        }
+
+        .payment-icons i:hover {
+            color: var(--golden);
+            transform: scale(1.1);
+        }
+
+        .footer-stats {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .footer-stats-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--golden);
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer-animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
         /* responsive */
         @media (max-width: 767px) {
             .display-4 {
@@ -252,6 +719,16 @@
             .parallax-section {
                 background-attachment: scroll;
             }
+
+            .cart-preview {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
+
+            .footer-stats {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -259,13 +736,12 @@
 <body>
 
     <!-- ===== 1. NAVBAR (sticky, animated) ===== -->
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top py-3" data-aos="fade-down"
-        data-aos-duration="900">
+    <nav class="navbar navbar-expand-lg shadow-sm sticky-top py-3" data-aos="fade-down" data-aos-duration="900">
         <div class="container">
-            <a class="navbar-brand fw-bold fs-3" href="#">
+            <a class="navbar-brand fw-bold fs-3" href="index.html">
                 <i class="bi bi-bag-heart-fill me-2 spin-slow" style="color: var(--deep-indigo);"></i>
                 <span
-                    style="background: linear-gradient(145deg, #1a1a3d, #5f4b8b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AnimateCart</span>
+                    style="background: linear-gradient(145deg, var(--deep-indigo), var(--soft-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AnimateCart</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarMain">
@@ -273,51 +749,60 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold gap-3">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#deals">Deals</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#testimonials">Stories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#brands">Brands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deals.html">Deals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="stories.html">Stories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="brands.html">Brands</a></li>
                 </ul>
                 <div class="d-flex gap-2">
-                    <a href="#" class="btn btn-outline-dark rounded-pill position-relative ripple-btn" id="cartBtn">
+                    <div class="theme-toggle me-2" id="themeToggle">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                    </div>
+                    <a href="cart.html" class="btn btn-outline-dark rounded-pill position-relative ripple-btn"
+                        id="cartBtn">
                         <i class="bi bi-cart3"></i> <span id="cartCount"
                             class="badge bg-dark text-white rounded-pill">0</span>
                     </a>
                     <a href="#" class="btn btn-primary rounded-pill px-4 ripple-btn"
-                        style="background:var(--deep-indigo); border: none;" id="loginBtn"><i
+                        style="background: var(--deep-indigo); border: none;" id="loginBtn"><i
                             class="bi bi-person-circle"></i> Sign in</a>
                 </div>
             </div>
         </div>
     </nav>
 
+    
     <!-- ===== 2. HERO SECTION (full visual + real photo) ===== -->
-    <section id="home" class="pt-5 pb-5" style="background: linear-gradient(135deg, #f1f4ff 0%, #e6edfa 100%);">
+    <section id="home" class="pt-5 pb-5"
+        style="background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
                     <h1 class="display-4 fw-bold mb-4 animate__animated animate__bounceInDown"
-                        style="color:var(--deep-indigo);">Shop the <span style="color:#ff6f61;">movement</span></h1>
+                        style="color: var(--deep-indigo);">Shop the <span
+                            style="color: var(--vibrant-coral);">movement</span></h1>
                     <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">12 sections filled with
                         stunning real photography. Every image tells a story, every hover reacts.</p>
                     <div class="d-flex gap-3 flex-wrap">
                         <a href="#products" class="btn btn-lg btn-dark rounded-pill px-5 py-3 shadow ripple-btn"
-                            style="background:var(--deep-indigo);"><i class="bi bi-arrow-down-circle"></i> Explore</a>
+                            style="background: var(--deep-indigo);"><i class="bi bi-arrow-down-circle"></i> Explore</a>
                         <a href="#" class="btn btn-lg btn-outline-secondary rounded-pill px-5 py-3"><i
                                 class="bi bi-camera-reels"></i> Showreel</a>
                     </div>
                     <div class="mt-5 d-flex gap-3 float-me">
-                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"><i class="bi bi-truck fs-5 me-2"
-                                style="color:var(--deep-indigo);"></i>Free shipping</span>
-                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"><i
-                                class="bi bi-arrow-repeat fs-5 me-2" style="color:var(--deep-indigo);"></i>30 days
+                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"
+                            style="background: var(--card-bg) !important; color: var(--text-primary) !important;"><i
+                                class="bi bi-truck fs-5 me-2" style="color: var(--deep-indigo);"></i>Free
+                            shipping</span>
+                        <span class="badge bg-white text-dark p-3 rounded-4 shadow-sm"
+                            style="background: var(--card-bg) !important; color: var(--text-primary) !important;"><i
+                                class="bi bi-arrow-repeat fs-5 me-2" style="color: var(--deep-indigo);"></i>30 days
                             return</span>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-delay="200">
-                    <!-- real hero image: shopping/lifestyle -->
                     <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/d9/a4/a6/7b/95/v1_E10/E107C3QR.JPG?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=a1fff93b248f92664e48b58a9fbf0b0c45c887bbc7dfa4f1455be4dd09e02235"
                         alt="happy shopping lifestyle" class="img-fluid rounded-5 shadow-lg card-3d-hover"
                         style="max-width: 100%; height: auto; object-fit: cover; aspect-ratio: 4/3;">
@@ -345,11 +830,10 @@
         <div class="row g-4" id="productGrid"></div>
     </section>
 
-    <!-- ===== 5. DEALS & OFFERS BANNER (real photo background) - FIXED LINE 176 ===== -->
+    <!-- ===== 5. DEALS & OFFERS BANNER (real photo background) ===== -->
     <section id="deals" class="parallax-section my-5"
         style="background-image: url('https://images.pexels.com/photos/5632371/pexels-photo-5632371.jpeg?auto=compress&cs=tinysrgb&w=600'); min-height: 300px; display: flex; align-items: center;"
         data-aos="fade">
-        <!-- Dark overlay div -->
         <div class="overlay-dark"></div>
         <div class="container text-white text-center py-5 content-above" data-aos="zoom-in" data-aos-duration="1200">
             <h2 class="display-5 fw-bold animate__animated animate__flash animate__infinite animate__slow">FLAT 40% OFF
@@ -396,7 +880,7 @@
     </section>
 
     <!-- ===== 7. TESTIMONIALS / CUSTOMER STORIES (real faces) ===== -->
-    <section id="testimonials" class="bg-light py-5" data-aos="fade-up">
+    <section id="testimonials" class="py-5" data-aos="fade-up" style="background: var(--bg-secondary);">
         <div class="container">
             <h2 class="fw-bold mb-5 text-center"><i class="bi bi-chat-heart"></i> what our buyers say</h2>
             <div class="row g-4">
@@ -454,7 +938,7 @@
     </section>
 
     <!-- ===== 9. WHY SHOP WITH US (real lifestyle imagery) ===== -->
-    <section class="py-5 bg-white" data-aos="fade-up">
+    <section class="py-5" data-aos="fade-up" style="background: var(--bg-primary);">
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-md-6" data-aos="fade-right">
@@ -465,26 +949,30 @@
                 <div class="col-md-6">
                     <div class="row g-3">
                         <div class="col-6" data-aos="fade-left" data-aos-delay="0">
-                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-truck fs-1"
-                                    style="color:var(--deep-indigo);"></i>
+                            <div class="p-3 border rounded-4 text-center"
+                                style="border-color: var(--border-color) !important;"><i class="bi bi-truck fs-1"
+                                    style="color: var(--deep-indigo);"></i>
                                 <p class="mt-2">Free shipping</p>
                             </div>
                         </div>
                         <div class="col-6" data-aos="fade-left" data-aos-delay="100">
-                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-arrow-repeat fs-1"
-                                    style="color:var(--deep-indigo);"></i>
+                            <div class="p-3 border rounded-4 text-center"
+                                style="border-color: var(--border-color) !important;"><i class="bi bi-arrow-repeat fs-1"
+                                    style="color: var(--deep-indigo);"></i>
                                 <p class="mt-2">30 days return</p>
                             </div>
                         </div>
                         <div class="col-6" data-aos="fade-left" data-aos-delay="200">
-                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-shield-check fs-1"
-                                    style="color:var(--deep-indigo);"></i>
+                            <div class="p-3 border rounded-4 text-center"
+                                style="border-color: var(--border-color) !important;"><i class="bi bi-shield-check fs-1"
+                                    style="color: var(--deep-indigo);"></i>
                                 <p class="mt-2">Secure</p>
                             </div>
                         </div>
                         <div class="col-6" data-aos="fade-left" data-aos-delay="300">
-                            <div class="p-3 border rounded-4 text-center"><i class="bi bi-gift fs-1"
-                                    style="color:var(--deep-indigo);"></i>
+                            <div class="p-3 border rounded-4 text-center"
+                                style="border-color: var(--border-color) !important;"><i class="bi bi-gift fs-1"
+                                    style="color: var(--deep-indigo);"></i>
                                 <p class="mt-2">Gift wraps</p>
                             </div>
                         </div>
@@ -520,16 +1008,17 @@
     </section>
 
     <!-- ===== 11. NEWSLETTER + BIG VISUAL (real photo) ===== -->
-    <section class="py-5" style="background:#eaf0f6;" data-aos="flip-up">
+    <section class="py-5" style="background: var(--bg-secondary);" data-aos="flip-up">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-7">
                     <h2 class="fw-bold">get 15% off 🎁</h2>
                     <p>Subscribe to our animated newsletter + receive a welcome gift.</p>
                     <div class="input-group mb-3 w-75">
-                        <input type="email" class="form-control rounded-start-pill" placeholder="Your email">
+                        <input type="email" class="form-control rounded-start-pill" placeholder="Your email"
+                            style="background: var(--bg-primary); color: var(--text-primary); border-color: var(--border-color);">
                         <button class="btn btn-dark rounded-end-pill px-4 ripple-btn"
-                            style="background:var(--deep-indigo);">Subscribe</button>
+                            style="background: var(--deep-indigo);">Subscribe</button>
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -541,102 +1030,137 @@
         </div>
     </section>
 
-    <!-- ===== 12. FOOTER (with real image) ===== -->
-    <footer class="bg-dark text-white pt-5 pb-4">
+    <!-- ===== 12. MODERN FOOTER (Premium Design) ===== -->
+    <footer class="modern-footer pt-5 pb-4">
         <div class="container">
             <div class="row g-4">
-                <div class="col-md-3" data-aos="fade-right">
-                    <i class="bi bi-bag-heart-fill fs-1 mb-3 d-block" style="color:var(--golden);"></i>
-                    <img src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=600"
-                        class="img-fluid mb-3 rounded-3" alt="footer lifestyle" style="max-width: 200px;">
-                    <p class="small">12 sections, real imagery, endless animations. Est. 2026.</p>
-                </div>
-                <div class="col-md-2" data-aos="fade-up" data-aos-delay="50">
-                    <h5>Explore</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 footer-link">New arrivals</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">Best sellers</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">Sale</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2" data-aos="fade-up" data-aos-delay="100">
-                    <h5>Support</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 footer-link">Contact</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">FAQs</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">Shipping</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2" data-aos="fade-up" data-aos-delay="150">
-                    <h5>Company</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white-50 footer-link">About</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">Careers</a></li>
-                        <li><a href="#" class="text-white-50 footer-link">Press</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3" data-aos="fade-left">
-                    <h5>Follow the motion</h5>
-                    <div class="text-light">
-                        <i class="bi bi-instagram fs-3 me-2 footer-link"></i>
-                        <i class="bi bi-twitter-x fs-3 me-2 footer-link"></i>
-                        <i class="bi bi-tiktok fs-3 footer-link"></i>
-
+                <!-- Brand Column -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-right" data-aos-delay="0">
+                    <div class="footer-brand-icon">
+                        <i class="bi bi-bag-heart-fill fs-2" style="color: white;"></i>
                     </div>
-                    <img src="https://images.pexels.com/photos/267399/pexels-photo-267399.jpeg?auto=compress&cs=tinysrgb&w=600"
-                        class="img-fluid mt-3 rounded-3" alt="app store badge" style="max-width: 150px;">
+                    <h3 class="text-white mb-3" style="font-weight: 700;">Animate<span
+                            style="color: var(--golden);">Cart</span></h3>
+                    <p class="text-white-50 mb-4" style="line-height: 1.6;">Creating magical shopping experiences with
+                        stunning animations and real product imagery. Join thousands of happy customers worldwide.</p>
+                    <div class="d-flex gap-2">
+                        <a href="https://github.com/ibmoore04" class="footer-social-icon"><i
+                                class="bi bi-github"></i></a>
+                        <a href="https://x.com/ibmoore911" class="footer-social-icon"><i
+                                class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61565920483171" class="footer-social-icon"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="https://wa.me/2347053357203" class="footer-social-icon"><i
+                                class="bi bi-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/akanbi-ibrahim-4ab3043a6/" class="footer-social-icon"><i
+                                class="bi bi-linkedin"></i></a>
+                    </div>
                 </div>
-
-                <div class="d-flex gap-3 mt-3">
-                    <a href="https://github.com/ibmoore04" class="text-white fs-4" target="_blank"><i
-                            class="bi bi-github"></i></a>
-                    <a href="https://www.linkedin.com/in/akanbi-ibrahim-4ab3043a6/" class="text-white fs-4"
-                        target="_blank"><i class="bi bi-linkedin"></i></a>
-                    <a href="https://www.facebook.com/profile.php?id=61565920483171" class="text-white fs-4"
+                <!-- <a href="" class="text-white fs-4" target="_blank"><i
+                            class=""></i></a>
+                    <a href=" class="text-white fs-4"
+                        target="_blank"><i class=""></i></a>
+                    <a href="" class="text-white fs-4"
                         target="_blank"><i class="bi bi-facebook"></i></a>
-                    <a href="https://wa.me/2347053357203" class="text-white fs-4" target="_blank"><i
-                            class="bi bi-whatsapp"></i></a>
+                    <a href="" class="text-white fs-4" target="_blank"><i
+                            class="bi bi-whatsapp"></i></a> -->
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="footer-heading">Shop</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link-modern">New Arrivals</a></li>
+                        <li><a href="#" class="footer-link-modern">Best Sellers</a></li>
+                        <li><a href="#" class="footer-link-modern">Trending Now</a></li>
+                        <li><a href="#" class="footer-link-modern">Limited Edition</a></li>
+                        <li><a href="#" class="footer-link-modern">Clearance Sale</a></li>
+                    </ul>
                 </div>
 
+                <!-- Support -->
+                <div class="col-lg-2 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="footer-heading">Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link-modern">Help Center</a></li>
+                        <li><a href="#" class="footer-link-modern">Returns & Exchanges</a></li>
+                        <li><a href="#" class="footer-link-modern">Shipping Info</a></li>
+                        <li><a href="#" class="footer-link-modern">Order Tracking</a></li>
+                        <li><a href="#" class="footer-link-modern">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company -->
+                <div class="col-lg-2 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <h5 class="footer-heading">Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link-modern">About Us</a></li>
+                        <li><a href="#" class="footer-link-modern">Careers</a></li>
+                        <li><a href="#" class="footer-link-modern">Press</a></li>
+                        <li><a href="#" class="footer-link-modern">Blog</a></li>
+                        <li><a href="#" class="footer-link-modern">Affiliates</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter & Stats -->
+                <div class="col-lg-2 col-md-12" data-aos="fade-left" data-aos-delay="400">
+                    <h5 class="footer-heading">Newsletter</h5>
+                    <div class="mb-3">
+                        <input type="email" class="form-control newsletter-input" placeholder="Enter your email"
+                            style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: white;">
+                        <button class="btn newsletter-btn w-100 mt-2">
+                            <i class="bi bi-envelope-paper"></i> Subscribe
+                        </button>
+                    </div>
+                    <div class="footer-stats mt-3">
+                        <span class="footer-stats-number">50K+</span>
+                        <span class="text-white-50 small">Happy Customers</span>
+                    </div>
+                </div>
             </div>
 
-
+            <!-- Bottom Bar -->
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-white-50 mb-0 small">© 2026 AnimateCart. All rights reserved. Crafted with <i
+                                class="bi bi-heart-fill text-danger"></i> for the modern web.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        <div class="payment-icons">
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-paypal"></i>
+                            <i class="bi bi-apple"></i>
+                            <i class="bi bi-google-play"></i>
+                            <i class="bi bi-amazon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- 12. FOOTER -->
-    <!-- <footer class="bg-dark text-white pt-5 pb-4">
-        <div class="container">
-            <div class="row g-4">
-
-                <div class="col-md-3">
-                    <h5>AnimateCart</h5>
-                    <img src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=600"
-                        class="img-fluid rounded-3 mb-3" style="max-width:150px;">
-
-                    
-                    <div class="d-flex gap-3 mt-3">
-                        <a href="#" class="text-white fs-4"><i class="bi bi-linkedin"></i></a>
-                        <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white fs-4"><i class="bi bi-whatsapp"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Explore</h5>
-                    <ul class="list-unstyled">
-                        <li>New arrivals</li>
-                        <li>Best sellers</li>
-                        <li>Sale</li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </footer> -->
     <!-- toast -->
     <div id="liveToast" class="toast-notification"><i class="bi bi-check-circle-fill me-2"></i> <span id="toastMsg">Item
             added</span></div>
+
+    <!-- Mini Cart Preview -->
+    <div id="cartPreview" class="cart-preview" style="display: none;">
+        <div class="cart-preview-header">
+            <h6>Shopping Cart <span id="previewCount" class="badge bg-light text-dark">0</span></h6>
+            <button class="close-preview"
+                style="background: none; border: none; color: white; font-size: 24px;">&times;</button>
+        </div>
+        <div id="cartPreviewItems" class="cart-preview-items">
+            <p style="text-align:center;padding:20px;">Loading cart...</p>
+        </div>
+        <div class="cart-preview-footer">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <strong>Total:</strong>
+                <strong>$<span id="previewTotal">0</span></strong>
+            </div>
+            <button class="btn-checkout">Proceed to Checkout →</button>
+        </div>
+    </div>
 
     <!-- scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -666,14 +1190,206 @@
         const toastEl = document.getElementById('liveToast');
         const toastMsg = document.getElementById('toastMsg');
 
+        // Dark Mode Toggle Functionality
+        function initDarkMode() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.classList.remove('bi-moon-stars');
+                themeIcon.classList.add('bi-sun');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('bi-sun');
+                themeIcon.classList.add('bi-moon-stars');
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                if (currentTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    themeIcon.classList.remove('bi-sun');
+                    themeIcon.classList.add('bi-moon-stars');
+                    localStorage.setItem('theme', 'light');
+                    showToast('☀️ Light mode activated');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeIcon.classList.remove('bi-moon-stars');
+                    themeIcon.classList.add('bi-sun');
+                    localStorage.setItem('theme', 'dark');
+                    showToast('🌙 Dark mode activated');
+                }
+            });
+        }
+
+        function animateCartIcon() {
+            const cartIcon = document.querySelector('#cartBtn .bi-cart3');
+            cartIcon.style.transform = 'scale(1.2)';
+            cartIcon.style.transition = 'transform 0.2s ease';
+            setTimeout(() => {
+                cartIcon.style.transform = 'scale(1)';
+            }, 200);
+
+            const cartBadge = document.querySelector('#cartCount');
+            cartBadge.classList.add('cart-bounce');
+            setTimeout(() => {
+                cartBadge.classList.remove('cart-bounce');
+            }, 300);
+        }
+
         function updateCartCount() {
-            cartSpan.innerText = cart.reduce((acc, i) => acc + (i.quantity || 1), 0);
+            const newCount = cart.reduce((acc, i) => acc + (i.quantity || 1), 0);
+            const oldCount = parseInt(cartSpan.innerText);
+            cartSpan.innerText = newCount;
+
+            if (newCount > oldCount) {
+                animateCartIcon();
+            }
         }
 
         function showToast(msg) {
             toastMsg.innerText = msg;
             toastEl.classList.add('show');
             setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+
+        function getProductImage(productId) {
+            const product = products.find(p => p.id === productId);
+            return product ? product.img : '';
+        }
+
+        function updateCartPreview() {
+            const previewItems = document.getElementById('cartPreviewItems');
+            const previewCount = document.getElementById('previewCount');
+            const previewTotal = document.getElementById('previewTotal');
+
+            let total = 0;
+            let itemsHtml = '';
+
+            cart.forEach(item => {
+                const itemTotal = item.price * (item.quantity || 1);
+                total += itemTotal;
+                itemsHtml += `
+                    <div class="cart-preview-item">
+                        <img src="${getProductImage(item.id)}" alt="${item.name}">
+                        <div class="cart-preview-item-info">
+                            <h6>${item.name}</h6>
+                            <p>$${item.price} x ${item.quantity || 1}</p>
+                        </div>
+                        <button class="remove-item" data-id="${item.id}">×</button>
+                    </div>
+                `;
+            });
+
+            previewItems.innerHTML = itemsHtml || '<p style="text-align:center;padding:20px;">Cart is empty</p>';
+            previewCount.innerText = cart.reduce((acc, i) => acc + (i.quantity || 1), 0);
+            previewTotal.innerText = total.toFixed(2);
+
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.dataset.id);
+                    cart = cart.filter(item => item.id !== id);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    updateCartPreview();
+                    showToast('Item removed from cart');
+                });
+            });
+        }
+
+        function initCartPreview() {
+            const cartBtn = document.getElementById('cartBtn');
+            const cartPreview = document.getElementById('cartPreview');
+            let isPreviewOpen = false;
+
+            cartBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!isPreviewOpen) {
+                    updateCartPreview();
+                    cartPreview.style.display = 'block';
+                    isPreviewOpen = true;
+                } else {
+                    cartPreview.style.display = 'none';
+                    isPreviewOpen = false;
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (isPreviewOpen && !cartPreview.contains(e.target) && !cartBtn.contains(e.target)) {
+                    cartPreview.style.display = 'none';
+                    isPreviewOpen = false;
+                }
+            });
+
+            const closeBtn = document.querySelector('.close-preview');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    cartPreview.style.display = 'none';
+                    isPreviewOpen = false;
+                });
+            }
+        }
+
+        function initCheckout() {
+            const checkoutBtn = document.querySelector('.btn-checkout');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', () => {
+                    if (cart.length === 0) {
+                        showToast('Your cart is empty!');
+                    } else {
+                        showToast(`Proceeding to checkout with ${cart.reduce((acc, i) => acc + (i.quantity || 1), 0)} items`);
+                    }
+                });
+            }
+        }
+
+        function enhanceProductCards() {
+            const cards = document.querySelectorAll('.card-3d-hover');
+            cards.forEach(card => {
+                card.classList.add('product-card');
+                const buttons = card.querySelectorAll('.btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function (e) {
+                        this.classList.add('btn-clicked');
+                        setTimeout(() => {
+                            this.classList.remove('btn-clicked');
+                        }, 150);
+                    });
+                });
+            });
+        }
+
+        function initScrollAnimations() {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.add('section-hidden');
+            });
+
+            function checkVisibility() {
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const isVisible = rect.top < window.innerHeight - 100;
+                    if (isVisible) {
+                        section.classList.add('section-visible');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', checkVisibility);
+            window.addEventListener('load', checkVisibility);
+            checkVisibility();
+        }
+
+        function enhanceGalleryImages() {
+            const galleryImages = document.querySelectorAll('.img-zoom-wrapper img');
+            galleryImages.forEach(img => {
+                img.classList.add('img-hover-scale');
+            });
         }
 
         function renderProducts(filter = 'all') {
@@ -693,6 +1409,7 @@
                 grid.innerHTML = html;
                 document.querySelectorAll('.add-to-cart').forEach(b => b.addEventListener('click', addToCart));
                 AOS.refresh();
+                enhanceProductCards();
             }, 300);
         }
 
@@ -702,14 +1419,23 @@
             const name = btn.dataset.name;
             const price = parseFloat(btn.dataset.price);
             const exist = cart.find(i => i.id === id);
+
             if (exist) exist.quantity = (exist.quantity || 1) + 1;
             else cart.push({ id, name, price, quantity: 1 });
+
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
-            showToast(`${name} added`);
-            btn.innerHTML = '<i class="bi bi-check-lg"></i> Added';
+            showToast(`${name} added to cart`);
+
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Added!';
             btn.disabled = true;
-            setTimeout(() => { btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add'; btn.disabled = false; }, 800);
+            btn.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add';
+                btn.disabled = false;
+                btn.style.transform = 'scale(1)';
+            }, 800);
         }
 
         document.querySelectorAll('.cat-pill').forEach(p => {
@@ -720,19 +1446,18 @@
             });
         });
 
-        document.getElementById('cartBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!cart.length) showToast('🛒 empty cart');
-            else showToast('cart: ' + cart.map(i => `${i.name} (${i.quantity || 1})`).join(', '));
-        });
-
         document.getElementById('loginBtn').addEventListener('click', (e) => {
             e.preventDefault(); showToast('✨ sign-in modal ✨');
         });
 
-        // initial
+        // Initial calls
         renderProducts('all');
         updateCartCount();
+        initDarkMode();
+        initCartPreview();
+        initCheckout();
+        initScrollAnimations();
+        enhanceGalleryImages();
 
         // storage sync
         window.addEventListener('storage', (e) => { if (e.key === 'cart') { cart = JSON.parse(e.newValue) || []; updateCartCount(); } });

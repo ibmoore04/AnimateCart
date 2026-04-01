@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | AnimateCart</title>
+    <link rel="icon" href="./anime.jpg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Copy all your existing styles from index.html here */
+        :root {
+            --deep-indigo: #1a1a3d;
+            --soft-glow: #5f4b8b;
+            --vibrant-coral: #ff6f61;
+            --golden: #ffb347;
+            --bg-primary: #fcfcff;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a3d;
+            --text-secondary: #4a5568;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(26, 26, 61, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --deep-indigo: #6b5b95;
+            --soft-glow: #9b8bcb;
+            --vibrant-coral: #ff8a7a;
+            --golden: #ffc46b;
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Copy all other styles from index.html (cart bounce, product card, etc.) */
+        .navbar {
+            background: var(--bg-secondary) !important;
+            transition: background 0.3s ease;
+        }
+
+        .card {
+            background: var(--card-bg) !important;
+            transition: background 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: #e0e0e0 !important;
+        }
+
+        [data-theme="dark"] .nav-link:hover {
+            color: var(--golden) !important;
+        }
+
+        [data-theme="dark"] .card {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+        }
+
+        [data-theme="dark"] .card-body {
+            background-color: #1a1a1a !important;
+        }
+
+        [data-theme="dark"] .card-body .fw-bold,
+        [data-theme="dark"] .card-body .text-primary {
+            color: #ffffff !important;
+        }
+
+        .card-3d-hover {
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+        }
+
+        .card-3d-hover:hover {
+            transform: perspective(800px) rotateY(4deg) translateY(-8px);
+            box-shadow: 0 25px 35px -10px var(--shadow-color);
+        }
+
+        .img-zoom-wrapper {
+            overflow: hidden;
+            border-radius: inherit;
+        }
+
+        .img-zoom-wrapper img {
+            transition: transform 0.7s ease;
+        }
+
+        .img-zoom-wrapper:hover img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        .cat-pill {
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .cat-pill:hover,
+        .cat-pill.active {
+            background: var(--deep-indigo);
+            color: white !important;
+            border-color: var(--deep-indigo);
+            transform: translateY(-4px);
+        }
+
+        .ripple-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-btn::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform 0.4s, opacity 0.6s;
+        }
+
+        .ripple-btn:active::after {
+            transform: scale(0, 0);
+            opacity: 0.3;
+            transition: 0s;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--deep-indigo);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px var(--shadow-color);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cart-bounce {
+            animation: cartBounce 0.3s ease;
+        }
+
+        @keyframes cartBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            background: var(--deep-indigo);
+            color: white;
+        }
+
+        .footer-link-modern {
+            color: var(--footer-text);
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .footer-link-modern:hover {
+            color: var(--golden);
+            transform: translateX(5px);
+        }
+
+        .modern-footer {
+            background: #0a0a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--deep-indigo), var(--golden), var(--vibrant-coral), var(--soft-glow));
+            animation: gradientShift 3s ease infinite;
+            background-size: 300% 100%;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .footer-brand-icon {
+            background: linear-gradient(135deg, var(--deep-indigo), var(--soft-glow));
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .footer-brand-icon:hover {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .footer-social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: #a0a0c0;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .footer-social-icon:hover {
+            background: var(--deep-indigo);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .footer-heading {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--golden);
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+
+        .newsletter-btn {
+            background: linear-gradient(135deg, var(--deep-indigo), var(--soft-glow));
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .payment-icons i {
+            font-size: 28px;
+            color: #a0a0c0;
+            transition: all 0.2s;
+            margin: 0 5px;
+        }
+
+        .payment-icons i:hover {
+            color: var(--golden);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 767px) {
+            .toast-notification {
+                left: 16px;
+                right: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg shadow-sm sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="index.html">
+                <i class="bi bi-bag-heart-fill me-2 spin-slow" style="color: var(--deep-indigo);"></i>
+                <span
+                    style="background: linear-gradient(145deg, var(--deep-indigo), var(--soft-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AnimateCart</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold gap-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="categories.html">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deals.html">Deals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="stories.html">Stories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="brands.html">Brands</a></li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <div class="theme-toggle me-2" id="themeToggle">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                    </div>
+                    <a href="cart.html" class="btn btn-outline-dark rounded-pill position-relative ripple-btn"
+                        id="cartBtn">
+                        <i class="bi bi-cart3"></i> <span id="cartCount"
+                            class="badge bg-dark text-white rounded-pill">0</span>
+                    </a>
+                    <a href="#" class="btn btn-primary rounded-pill px-4 ripple-btn"
+                        style="background: var(--deep-indigo); border: none;" id="loginBtn"><i
+                            class="bi bi-person-circle"></i> Sign in</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="py-5" style="background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold" data-aos="fade-down">All Products</h1>
+            <p class="lead" data-aos="fade-up">Discover our complete collection of premium items</p>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="container py-4">
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <span class="cat-pill active rounded-pill py-2 px-4 fw-semibold" data-filter="all">All Products</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="electronics">Electronics</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="fashion">Fashion</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="home">Home & Living</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="books">Books</span>
+            <span class="cat-pill rounded-pill py-2 px-4 fw-semibold" data-filter="toys">Toys</span>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="container pb-5">
+        <div class="row g-4" id="productGrid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="modern-footer pt-5 pb-4">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand-icon">
+                        <i class="bi bi-bag-heart-fill fs-2" style="color: white;"></i>
+                    </div>
+                    <h3 class="text-white mb-3" style="font-weight: 700;">Animate<span
+                            style="color: var(--golden);">Cart</span></h3>
+                    <p class="text-white-50 mb-4">Creating magical shopping experiences with stunning animations and
+                        real product imagery.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="footer-social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="footer-social-icon"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Shop</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="products.html" class="footer-link-modern">All Products</a></li>
+                        <li><a href="deals.html" class="footer-link-modern">Deals</a></li>
+                        <li><a href="categories.html" class="footer-link-modern">Categories</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link-modern">Help Center</a></li>
+                        <li><a href="#" class="footer-link-modern">Returns</a></li>
+                        <li><a href="#" class="footer-link-modern">Shipping</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link-modern">About Us</a></li>
+                        <li><a href="#" class="footer-link-modern">Careers</a></li>
+                        <li><a href="#" class="footer-link-modern">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-12">
+                    <h5 class="footer-heading">Newsletter</h5>
+                    <div class="mb-3">
+                        <input type="email" class="form-control newsletter-input" placeholder="Your email">
+                        <button class="btn newsletter-btn w-100 mt-2">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-white-50 mb-0 small">© 2026 AnimateCart. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        <div class="payment-icons">
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-paypal"></i>
+                            <i class="bi bi-apple"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="liveToast" class="toast-notification"><i class="bi bi-check-circle-fill me-2"></i> <span id="toastMsg">Item
+            added</span></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800 });
+
+        const products = [
+            { id: 1, name: 'Sonic headphones', price: 79, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/67/40/0c/d0/d8/v1_E10/E101BSWN.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=947197dc8d0b4fe171fc45218815453d7417802aa130b141a4cf9f64ef3762d6' },
+            { id: 2, name: 'Retro sneakers', price: 120, category: 'fashion', img: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600' },
+            { id: 3, name: 'Smart hub', price: 59, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/ce/fb/24/49/3c/v1_E10/E106Q7Y.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=727a66244f85b127d380051a1eab9320637f2e704f956ca9aff0f2bc171f0654' },
+            { id: 4, name: 'Leather watch', price: 215, category: 'fashion', img: 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=600' },
+            { id: 5, name: 'Cozy blanket', price: 45, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/e4/17/bd/a9/95/v1_E10/E105AJTH.jpeg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=f22bcf5dbbc14750e836d84d503494caf7ba562efa713830c4d7c942f6b337b2' },
+            { id: 6, name: 'Sci‑fi novel', price: 18, category: 'books', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/f7/b6/71/2b/f9/v1_E10/E107M051.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=cc006cccb9b01874dbf0e16a6bcac2a7ce795d4c6daa01cd03cd3ce5b510486e' },
+            { id: 7, name: 'Earbuds pro', price: 149, category: 'electronics', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/80/1e/ff/f3/25/v1_E10/E105DP7E.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=143237b46107f39e6936bd97c1ab6243fa47be02af820da8ba2e71311cdd9fb0' },
+            { id: 8, name: 'Designer lamp', price: 89, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/56/5d/24/f4/2d/v1_E10/E101F4EL.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=db17c09545286bdf87c41722fa102dcc84033ea02651f4a74357d3db22c9b3ae' },
+            { id: 9, name: 'Action figure', price: 34, category: 'toys', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/af/f7/a2/22/45/v1_E10/E106MRHA.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c1885f32a3ad955f8fd04b4d5708a13b188787f2b683068eb4527070a4a9f519' },
+            { id: 10, name: 'Puzzle 1000pcs', price: 22, category: 'toys', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/be/df/05/f0/f0/v1_E11/E117V2I0.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=864d0a0ec0a245cf7351382a44b86bdb9f96b47ccd3eeb2547ae767dd473a10f' },
+            { id: 11, name: 'Cookbook', price: 27, category: 'books', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3f/d2/29/fb/0d/v1_E10/E1027PH7.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=4b6c531555a31392255927fcb4c64803c8c185cc244679e38ec85872745c7cda' },
+            { id: 12, name: 'Scented candle', price: 32, category: 'home', img: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/09/45/4c/67/c4/v1_E11/E113CAC9.jpg?w=800&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=00d15d56c8eac33466f5e5c66d85e1bb980f5d5a680099f9066e5e7d9e07edd7' }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const grid = document.getElementById('productGrid');
+        const cartSpan = document.getElementById('cartCount');
+        const toastEl = document.getElementById('liveToast');
+        const toastMsg = document.getElementById('toastMsg');
+
+        function updateCartCount() {
+            cartSpan.innerText = cart.reduce((acc, i) => acc + (i.quantity || 1), 0);
+        }
+
+        function showToast(msg) {
+            toastMsg.innerText = msg;
+            toastEl.classList.add('show');
+            setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+
+        function renderProducts(filter = 'all') {
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            let html = '';
+            filtered.forEach(p => {
+                html += `<div class="col-sm-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm card-3d-hover" style="border-radius:28px; overflow:hidden;">
+                        <div class="img-zoom-wrapper" style="height:200px;"><img src="${p.img}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="${p.name}"></div>
+                        <div class="card-body">
+                            <h6 class="fw-bold">${p.name}</h6>
+                            <p class="text-primary fw-semibold">$${p.price}</p>
+                            <button class="btn btn-sm btn-dark w-100 rounded-pill ripple-btn add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}"><i class="bi bi-cart-plus"></i> Add</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            grid.innerHTML = html;
+            document.querySelectorAll('.add-to-cart').forEach(b => b.addEventListener('click', addToCart));
+        }
+
+        function addToCart(e) {
+            const btn = e.currentTarget;
+            const id = parseInt(btn.dataset.id);
+            const name = btn.dataset.name;
+            const price = parseFloat(btn.dataset.price);
+            const exist = cart.find(i => i.id === id);
+            if (exist) exist.quantity = (exist.quantity || 1) + 1;
+            else cart.push({ id, name, price, quantity: 1 });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showToast(`${name} added`);
+            btn.innerHTML = '<i class="bi bi-check-lg"></i> Added!';
+            setTimeout(() => { btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add'; }, 800);
+        }
+
+        document.querySelectorAll('.cat-pill').forEach(p => {
+            p.addEventListener('click', function () {
+                document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
+                this.classList.add('active');
+                renderProducts(this.dataset.filter);
+            });
+        });
+
+        // Dark Mode
+        function initDarkMode() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.classList.replace('bi-moon-stars', 'bi-sun');
+            }
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                if (currentTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    themeIcon.classList.replace('bi-sun', 'bi-moon-stars');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeIcon.classList.replace('bi-moon-stars', 'bi-sun');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        renderProducts('all');
+        updateCartCount();
+        initDarkMode();
+    </script>
+</body>
+
+</html>
